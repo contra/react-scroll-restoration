@@ -1,12 +1,9 @@
-export const scrollTo = (scrollnumber = 0): number =>
+export const scrollTo = (node = document.documentElement, scrollnumber = 0): number =>
   window.requestAnimationFrame(() => {
-    window.scrollTo(0, scrollnumber);
+    node.scrollTo(0, scrollnumber);
   });
 
-export const getScrollPage = (): number => {
-  let docScrollTop = 0;
-  if (document.documentElement && document.documentElement !== null) {
-    docScrollTop = document.documentElement.scrollTop;
-  }
-  return window.pageYOffset || docScrollTop;
+export const getScrollPage = (node = document.documentElement): number => {
+  if (!node) return window.pageYOffset;
+  return node.scrollTop;
 };

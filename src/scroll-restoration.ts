@@ -6,11 +6,13 @@ export const DefaultKey = 'init-enter';
 
 interface IProps {
   visitedUrl: Map<string, number>;
+  node?: HTMLElement;
 }
 
 function ScrollRestoration({
   history,
   visitedUrl,
+  node
 }: RouteComponentProps & IProps) {
   const handlePopStateChange = () => {
     const { location } = history;
@@ -18,7 +20,7 @@ function ScrollRestoration({
     const existingRecord = visitedUrl.get(key || DefaultKey);
 
     if (existingRecord !== undefined) {
-      scrollTo(existingRecord);
+      scrollTo(node, existingRecord);
     }
   };
 
@@ -35,7 +37,7 @@ function ScrollRestoration({
 export default withRouter(
   memo(ScrollRestoration, (prevProps, nextProps) => {
     const { location: prevLoaction, visitedUrl, history } = prevProps;
-    const { location: nextLoaction } = nextProps;
+    const { location: nextLoaction, node } = nextProps;
 
     const key = prevLoaction.key || DefaultKey;
 
@@ -44,11 +46,11 @@ export default withRouter(
         nextLoaction.search !== prevLoaction.search) &&
       nextLoaction.hash === '';
 
-    const scroll = getScrollPage();
+    const scroll = getScrollPage(node);
 
     if (locationChanged) {
       if (history.action !== 'POP') {
-        scrollTo(0);
+        scrollTo(node, 0);
         visitedUrl.set(key, scroll);
       } else {
         visitedUrl.set(key, scroll);
